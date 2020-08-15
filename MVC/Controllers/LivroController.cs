@@ -37,6 +37,16 @@ namespace MVC.Controllers
         {
             Livros.Add(livroModel);
 
+            if (livroModel.AutorId > 0)
+            {
+                var autor = AutorController
+                    .Autores
+                    .First(x => x.Id == livroModel.AutorId);
+
+                livroModel.Autor = autor;
+                autor.Livros.Add(livroModel);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -55,6 +65,24 @@ namespace MVC.Controllers
             livroToEdit.Publicacao = livroModel.Publicacao;
             livroToEdit.Titulo = livroModel.Titulo;
 
+            if (livroToEdit.AutorId != livroModel.AutorId)
+            {
+                var autor = AutorController
+                    .Autores
+                    .First(x => x.Id == livroModel.AutorId);
+
+                var autorAntigo = AutorController
+                    .Autores
+                    .First(x => x.Id == livroToEdit.AutorId);
+
+                var livroParaRemover = autorAntigo.Livros.First(x => x.Id == livroToEdit.Id);
+                autorAntigo.Livros.Remove(livroParaRemover);
+                autor.Livros.Add(livroToEdit);
+
+                livroToEdit.Autor = autor;
+                livroToEdit.AutorId = autor.Id;
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -69,6 +97,15 @@ namespace MVC.Controllers
         {
             var livroToRemove = Livros.FirstOrDefault(x => x.Id == livroModel.Id);
             Livros.Remove(livroToRemove);
+
+            if (livroModel.AutorId > 0)
+            {
+                var autor = AutorController
+                    .Autores
+                    .First(x => x.Id == livroModel.AutorId);
+
+                autor.Livros.Remove(livroModel);
+            }
 
             return RedirectToAction(nameof(Index));
         }
