@@ -8,9 +8,9 @@ namespace MVC.Controllers
     {
         private readonly AutorRepository _autorRepository;
 
-        public AutorController()
+        public AutorController(AutorRepository autorRepository)
         {
-            _autorRepository = new AutorRepository();
+            _autorRepository = autorRepository;
         }
 
         public IActionResult Index()

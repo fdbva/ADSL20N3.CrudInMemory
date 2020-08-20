@@ -8,9 +8,9 @@ namespace MVC.Controllers
     {
         private readonly LivroRepository _livroRepository;
 
-        public LivroController()
+        public LivroController(LivroRepository livroRepository)
         {
-            _livroRepository = new LivroRepository();
+            _livroRepository = livroRepository;
         }
 
         public IActionResult Index()
