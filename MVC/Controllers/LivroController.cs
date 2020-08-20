@@ -1,32 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Data.Repositories;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using MVC.Models;
 
 namespace MVC.Controllers
 {
     public class LivroController : Controller
     {
-        public static List<LivroModel> Livros { get; } = new List<LivroModel>();
+        private readonly LivroRepository _livroRepository;
+
+        public LivroController()
+        {
+            _livroRepository = new LivroRepository();
+        }
 
         public IActionResult Index()
         {
-            return View(Livros);
+            return View(_livroRepository.GetAll());
         }
 
         public IActionResult Details(int id)
         {
-            //var livro = Livros.FirstOrDefault(x => x.Id == id);
-
-            foreach (var livroModel in Livros)
-            {
-                if (livroModel.Id == id)
-                {
-                    return View(livroModel);
-                }
-            }
-
-            return RedirectToAction(nameof(Index));
+            return View(_livroRepository.GetById(id));
         }
 
         [HttpGet]
@@ -35,7 +29,7 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult Create(LivroModel livroModel)
         {
-            Livros.Add(livroModel);
+            _livroRepository.Add(livroModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -43,17 +37,13 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View(Livros.First(x => x.Id == id));
+            return View(_livroRepository.GetById(id));
         }
 
         [HttpPost]
         public IActionResult Edit(LivroModel livroModel)
         {
-            var livroToEdit = Livros.First(x => x.Id == livroModel.Id);
-
-            livroToEdit.Isbn = livroModel.Isbn;
-            livroToEdit.Publicacao = livroModel.Publicacao;
-            livroToEdit.Titulo = livroModel.Titulo;
+            _livroRepository.Edit(livroModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -61,14 +51,13 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            return View(Livros.First(x => x.Id == id));
+            return View(_livroRepository.GetById(id));
         }
 
         [HttpPost]
         public IActionResult Delete(LivroModel livroModel)
         {
-            var livroToRemove = Livros.FirstOrDefault(x => x.Id == livroModel.Id);
-            Livros.Remove(livroToRemove);
+            _livroRepository.Remove(livroModel);
 
             return RedirectToAction(nameof(Index));
         }

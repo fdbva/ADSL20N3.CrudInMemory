@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MVC.Models
+namespace Domain.Models
 {
     public class AutorModel
     {

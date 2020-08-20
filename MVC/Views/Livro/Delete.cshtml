@@ -1,4 +1,4 @@
-﻿@model MVC.Models.LivroModel
+﻿@model LivroModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -35,12 +35,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Publicacao)
         </dd>
-        <dt class="col-sm-2">
+        @*<dt class="col-sm-2">
             <span>Nome do Autor</span>
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Autor.Nome)
-        </dd>
+        </dd>*@
     </dl>
     
     <form asp-action="Delete">

@@ -1,32 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Data.Repositories;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using MVC.Models;
 
 namespace MVC.Controllers
 {
     public class AutorController : Controller
     {
-        public static List<AutorModel> Autores { get; } = new List<AutorModel>();
+        private readonly AutorRepository _autorRepository;
+
+        public AutorController()
+        {
+            _autorRepository = new AutorRepository();
+        }
 
         public IActionResult Index()
         {
-            return View(Autores);
+            return View(_autorRepository.GetAll());
         }
 
         public IActionResult Details(int id)
         {
-            //var autor = Autores.FirstOrDefault(x => x.Id == id);
-
-            foreach (var autorModel in Autores)
-            {
-                if (autorModel.Id == id)
-                {
-                    return View(autorModel);
-                }
-            }
-
-            return RedirectToAction(nameof(Index));
+            return View(_autorRepository.GetById(id));
         }
 
         [HttpGet]
@@ -35,7 +29,7 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult Create(AutorModel autorModel)
         {
-            Autores.Add(autorModel);
+            _autorRepository.Add(autorModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -43,17 +37,13 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            return View(Autores.First(x => x.Id == id));
+            return View(_autorRepository.GetById(id));
         }
 
         [HttpPost]
         public IActionResult Edit(AutorModel autorModel)
         {
-            var autorToEdit = Autores.First(x => x.Id == autorModel.Id);
-
-            autorToEdit.Nome = autorModel.Nome;
-            autorToEdit.UltimoNome = autorModel.UltimoNome;
-            autorToEdit.Nascimento = autorModel.Nascimento;
+            _autorRepository.Edit(autorModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -61,14 +51,13 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            return View(Autores.First(x => x.Id == id));
+            return View(_autorRepository.GetById(id));
         }
 
         [HttpPost]
         public IActionResult Delete(AutorModel autorModel)
         {
-            var autorToRemove = Autores.FirstOrDefault(x => x.Id == autorModel.Id);
-            Autores.Remove(autorToRemove);
+            _autorRepository.Remove(autorModel);
 
             return RedirectToAction(nameof(Index));
         }
