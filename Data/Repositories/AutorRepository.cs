@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Domain.Models;
 
@@ -7,6 +8,40 @@ namespace Data.Repositories
     public class AutorRepository
     {
         public static List<AutorModel> Autores { get; } = new List<AutorModel>();
+
+        public IEnumerable<AutorModel> Search(string keywords)
+        {
+            if (string.IsNullOrWhiteSpace(keywords))
+                return Enumerable.Empty<AutorModel>();
+
+            if(keywords.Length < 3)
+                return Enumerable.Empty<AutorModel>();
+
+            var results = new List<AutorModel>();
+
+            foreach (var autorModel in Autores)
+            {
+                if (autorModel.Nome
+                    .IndexOf(keywords, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    results.Add(autorModel);
+                }
+                else if(autorModel.UltimoNome
+                    .IndexOf(keywords, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    results.Add(autorModel);
+                }
+            }
+
+            //Solução por Linq
+            //var whereResults = Autores
+            //    .Where(x =>
+            //        x.Nome.IndexOf(keywords, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            //        x.UltimoNome.IndexOf(keywords, StringComparison.OrdinalIgnoreCase) >= 0)
+            //    .ToList();
+
+            return results;
+        }
 
         public IEnumerable<AutorModel> GetAll()
         {
