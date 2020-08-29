@@ -12,15 +12,17 @@ namespace Data.Repositories
         public IEnumerable<AutorModel> Search(string keywords)
         {
             if (string.IsNullOrWhiteSpace(keywords))
-                return Enumerable.Empty<AutorModel>();
+                return GetAll();
 
             if(keywords.Length < 3)
-                return Enumerable.Empty<AutorModel>();
+                return GetAll();
 
             var results = new List<AutorModel>();
 
-            foreach (var autorModel in Autores)
+            foreach (var autorModel in GetAll())
             {
+                //var contains = autorModel.Nome.Contains(keywords);
+                //var equals = string.Equals(autorModel.Nome, keywords, StringComparison.OrdinalIgnoreCase);
                 if (autorModel.Nome
                     .IndexOf(keywords, StringComparison.OrdinalIgnoreCase) >= 0)
                 {

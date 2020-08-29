@@ -13,9 +13,10 @@ namespace MVC.Controllers
             _autorRepository = autorRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string keyword)
         {
-            return View(_autorRepository.GetAll());
+            ViewBag.SearchKeyword = keyword;
+            return View(_autorRepository.Search(keyword));
         }
 
         public IActionResult Details(int id)
